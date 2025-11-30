@@ -24,6 +24,7 @@ reg [3:0] addr;
 reg [1:0] pulse_count;
 reg [2:0] next_state, prev_state;
 reg [2:0] prev_mode;
+reg [1:0] single_count;
 reg mode_in;
 parameter IDLE = 3'b000;
 parameter SINGLE = 3'b001;
@@ -78,7 +79,7 @@ begin
 end
 	
 //-----------------------------------------------------------------------------
-// COUNT LOGIC 
+// STATIC TRANSITION LOGIC 
 //-----------------------------------------------------------------------------
 always @(posedge clk or negedge rst_n) begin
     if(!rst_n) begin
@@ -157,6 +158,37 @@ begin
 	end
 end
 
+
+//-----------------------------------------------------------------------------
+//SINGLE_COUNT - This logic is used to have 2 acquisitions in Single as there
+//is one SPI frame delay in obtaining the data.
+//-----------------------------------------------------------------------------
+always @(posedge clk or negedge rst_n)
+begin
+	if (!rst_n)
+	begin
+		single_count <= 0;
+	end
+	
+	else if (state == SINGLE)
+	begin
+		if ((count == COUNT - 1) && single_count < 2)
+			single_count <= single_count + 1;
+			
+		else if (single_count == 2)
+			single_count <= single_count;
+			
+		else
+			single_count <= single_count;
+	end
+	
+	else if (state == IDLE)
+		single_count <= 0;
+		
+	else
+		single_count <= single_count;
+end
+
 //-----------------------------------------------------------------------------
 //MODE_COUNT LOGIC
 //-----------------------------------------------------------------------------
@@ -176,7 +208,13 @@ begin
 				if (count < COUNT - 1 && mode_count == 0)
 					mode_count <= 0;
 					
-				else if (count >= COUNT - 1 && mode_count == 0)
+				else if (count >= COUNT - 1 && single_count != 1)
+					mode_count <= 0;
+				
+				else if (count < COUNT - 1 && single_count == 1)
+					mode_count <= 0;
+					
+				else if (count >= COUNT - 1 && single_count == 1)
 					mode_count <= 1;
 					
 				else if (count >= COUNT - 1 && mode_count == 1)
@@ -232,6 +270,7 @@ begin
 		if (state == SINGLE || state == SINGLE_CONT)
 			addr <= channel_in;
 			
+//		if (prev_state == state && count == COUNT - 1)
 		else if (prev_state == state && count == COUNT - 1 && state != CONT_ONESHOT)
 		begin
 			if (addr < 7)
