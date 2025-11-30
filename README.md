@@ -30,9 +30,16 @@ The design streams **12-bit MSB-first samples** into FPGA logic with runtime sam
 | Data Width            | **12 bits**                                                                           |
 | Latency               | Command accepted from 3rd edge, data read in same 16-cycle frame                      |
 | Modes Implemented     | `idle`, `single`, `continuous`, `single_continuous`, `continuous_oneshot`             |
+| Bit order	            | MSB-first (SPI command and data)                                                      |
+| Data latency	        | 1 SPI frame delay (inherent ADC behavior)                                             |
 
 ---
+## 🕒 SPI Frame Latency (Inherent ADC Behavior)
 
+* The ADC128S022 returns conversion result one full SPI frame later because of its internal pipelined conversion mechanism.
+* DIN command in frame N → 12-bit result appears on DOUT in frame N+1 (next 16-clock frame).
+* This latency is internal to the ADC chip and not implemented as a pipeline inside RTL, but must be considered when interpreting hardware output.
+* 
 ## 🚀 Features
 
 * ✅ Datasheet-accurate SPI Master timing for ADC128S022
