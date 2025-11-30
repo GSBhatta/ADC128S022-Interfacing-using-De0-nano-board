@@ -1,7 +1,3 @@
-Here is your final polished, **ATS-ready, technically accurate, GitHub-understandable README** with badges, topics, and placeholders you can replace with PDF links in your repo or releases.
-
----
-
 ## 🔝 **ADC128S022 Interface using DE0-Nano (Cyclone IV E FPGA)**
 
 ![SPI](https://img.shields.io/badge/Protocol-SPI-blue)
@@ -24,7 +20,7 @@ The design streams **12-bit MSB-first samples** into FPGA logic with runtime sam
 | --------------------- | ------------------------------------------------------------------------------------- |
 | System Clock (`clk`)  | **50 MHz**                                                                            |
 | SPI Clock (`sclk`)    | **3.125 MHz**                                                                         |
-| PLL Usage             | ❌ Not used; **sclk not derived from PLL or external PLL/PLL phase-aligned clock**     |
+| PLL Usage             | ❌ Not used; **sclk not derived from PLL or external PLL**     |
 | Clock Source          | Pure RTL divider, **No PLL, No PLL Phase alignment, No jitter compensation from PLL** |
 | SPI Frame Size        | **16 sclk cycles per SPI frame**                                                      |
 | Valid ADC Data Window | **Bits 4–15 (12-bit)**                                                                |
@@ -40,7 +36,7 @@ The design streams **12-bit MSB-first samples** into FPGA logic with runtime sam
 ## 🚀 Features
 
 * ✅ Datasheet-accurate SPI Master timing for ADC128S022
-* ✅ Controllable sampling rate via `sample_en` logic (no PLL dependency)
+* ✅ Controllable sampling rate via `SAMPLES`
 * ✅ 5 ADC modes for flexible acquisition control
 * ✅ Multi-channel SCAN + ANY channel combination supported
 * ✅ Behavioral + gate-level verified, with FPGA bring-up tested
@@ -48,10 +44,10 @@ The design streams **12-bit MSB-first samples** into FPGA logic with runtime sam
 
 ---
 
-## ❗ FPGA Debug Limitation (Be honest & interview ready)
+## ❗ FPGA Debug Limitation
 
 * **Continuous and Single-Continuous modes** validated in hardware using Signal Tap.
-* **Single and One-Shot modes** could not be debug-triggered reliably in Signal Tap Logic Analyzer due to trigger constraints, but **both modes are fully verified in behavioral and gate simulation**.
+* **Single and One-Shot modes** could not be debug-triggered reliably in Signal Tap Logic Analyzer due to trigger constraints, but **both modes are fully verified in behavioral and gate simulation**. It can still be tested in Mixed Signal Oscilloscope.
 
 ---
 
@@ -93,13 +89,13 @@ root/
 3. ADC samples command at **3rd falling edge** (internal to ADC)
 4. `DOUT` captured on sclk rising edge
 5. 16 clocks total, **12-bit valid data at bits 4–15**
-6. `CS_n` de-asserted HIGH → frame complete
+6. `CS_N` de-asserted HIGH → frame complete
 
 ---
 
 ## 🛠 Tools & Technology
 
-* FPGA Bring-up → Using Quartus Prime Lite
+* FPGA Bring-up → Using Quartus Prime Lite Edition (18.1)
 * Simulation → Tested on ModelSim‑Intel FPGA Starter Edition
 * RTL -> Bitstream flow → Quartus synthesis, place-and-route, timing closure @ 50 MHz
 * Debug → Continuously monitored using Signal Tap logic triggers
@@ -108,10 +104,8 @@ root/
 
 ## 📚 Reference PDFs (add them to GitHub Releases)
 
-Once you upload manuals/datasheets to **GitHub Releases** or `/references/` folder in your repo, update these links:
-
-* 📘 [DE0-Nano User Manual PDF](replace_with_your_pdf_link)
-* 📘 [ADC128S022 Datasheet PDF](replace_with_your_pdf_link)
+* 📘 [DE0-Nano User Manual PDF](https://www.terasic.com.tw/attachment/archive/941/DE0-Nano-SoC_User_manual_rev.D0.pdf)
+* 📘 [ADC128S022 Datasheet PDF](https://www.ti.com/lit/ds/symlink/adc128s022.pdf?ts=1764525039287&ref_url=https%253A%252F%252Fwww.google.com%252F)
 
 ---
 
